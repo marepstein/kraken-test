@@ -1,0 +1,1 @@
+export { ProductInfoWithATC } from './ProductInfoWithATC';

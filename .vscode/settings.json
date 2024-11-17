@@ -1,0 +1,4 @@
+{
+  "prettier.configPath": "./client/.prettierrc",
+  "editor.formatOnSave": true
+}
