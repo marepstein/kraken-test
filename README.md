@@ -72,6 +72,8 @@ Best of luck!
 
 # Post Development Notes
 
+Please note the node version I used is 20.18.0. 
+
 ## Features 
 
 - Add to cart logic using local storage 
