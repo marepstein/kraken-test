@@ -68,3 +68,25 @@ Notes:
 - This has not been set up with any type of CSS-in-JS, but if that is something you would like to add, please feel free.
 
 Best of luck!
+
+
+# Post Development Notes
+
+## Features 
+
+- Add to cart logic using local storage 
+- Apollo client for fetching GraphQL data on the server 
+- Server-side data fetching and rendering for security and performance 
+- Mobile and desktop views
+- Add, remove, get total and clear cart logic 
+- Clear cart on basket click (just for testing purposes)
+- Custom hook with test
+- Tailwind styling
+- Types and TS 
+
+## Future improvements
+
+- Develop on add to cart logic e.g. implementing stock logic, so user cant add to cart if their card already contains the maximum stock quantity
+- Add button states regarding text e.g. 'adding to cart...', 'added to cart' etc
+- Get my custom render and renderHook functions working - faced some issues with the apollo client here so with more time would look into this.  
+- Continue developing on the modularization of the code (potentially look into rearranging ProductDetails) and adding more tests at component level and using snapshots
