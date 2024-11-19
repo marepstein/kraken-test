@@ -1,5 +1,3 @@
-import { TProduct } from "@/types/product";
-import { findItemInCart, formatPrice } from "@/utils/helpers";
 import {
   createContext,
   useCallback,
@@ -7,6 +5,9 @@ import {
   useMemo,
   useState,
 } from "react";
+
+import { TProduct } from "@/types/product";
+import { findItemInCart, isClient } from "@/utils/helpers";
 
 export interface ICartItem {
   product: TProduct;
@@ -17,14 +18,14 @@ export interface ICartProductsContextProps {
   addToCart: (product: TProduct, quantity: number) => void;
   removeFromCart: (product: TProduct) => void;
   clearCart: () => void;
-  getCartTotal: () => number;
+  getCartTotal: () => { total: number; totalQuantity: number };
 }
 
 export const CartProductsContext = createContext<ICartProductsContextProps>({
   addToCart: () => [],
   removeFromCart: () => [],
   clearCart: () => [],
-  getCartTotal: () => 0,
+  getCartTotal: () => ({ total: 0, totalQuantity: 0 }),
 });
 
 export interface ICartProductsProviderProps {
@@ -34,17 +35,30 @@ export interface ICartProductsProviderProps {
 export const CartProductsProvider = ({
   children,
 }: ICartProductsProviderProps) => {
-  const [cartItems, setCartItems] = useState<ICartItem[]>(() => {
-    if (typeof window !== "undefined") {
-      const storedCart = localStorage.getItem("cartItems");
-      return storedCart ? JSON.parse(storedCart) : [];
-    }
-    return [];
-  });
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (!isClient()) return;
+
+    const storedCart = localStorage.getItem("cartItems");
+    if (storedCart) {
+      try {
+        setCartItems(JSON.parse(storedCart));
+      } catch (error) {
+        console.error("Failed to parse stored cart items:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isClient()) return;
+
+    if (cartItems.length > 0) {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem("cartItems");
+    }
+  }, [cartItems, isClient]);
 
   const addToCart = useCallback((product: TProduct, quantity: number) => {
     setCartItems((prevCartItems) => {
@@ -60,8 +74,6 @@ export const CartProductsProvider = ({
 
       return [...prevCartItems, { product, quantity }];
     });
-
-    console.log(cartItems);
   }, []);
 
   const removeFromCart = useCallback((product: TProduct) => {
@@ -85,6 +97,7 @@ export const CartProductsProvider = ({
   }, []);
 
   const clearCart = useCallback(() => {
+    localStorage.removeItem("cartItems");
     setCartItems([]);
   }, []);
 
@@ -94,7 +107,12 @@ export const CartProductsProvider = ({
       0
     );
 
-    return total;
+    const totalQuantity = cartItems.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
+
+    return { total, totalQuantity };
   }, [cartItems]);
 
   const value = useMemo(

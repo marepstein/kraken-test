@@ -5,7 +5,7 @@ export const formatPrice = (price: number) => {
 };
 
 export const findItemInCart = (cartItems: ICartItem[], productId: string) => {
-  console.log("find item", cartItems);
-
   return cartItems.find((item) => item.product.id === productId);
 };
+
+export const isClient = () => typeof window !== "undefined";

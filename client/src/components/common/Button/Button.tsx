@@ -1,10 +1,5 @@
 import classnames, { Argument } from "classnames";
-import {
-  ButtonHTMLAttributes,
-  FC,
-  PropsWithChildren,
-  ReactElement,
-} from "react";
+import { ButtonHTMLAttributes, FC, PropsWithChildren } from "react";
 
 export interface IButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
@@ -24,7 +19,7 @@ export const Button: FC<PropsWithChildren<IButtonProps>> = ({
     <button
       {...rest}
       className={classnames(
-        `flex justify-center items-center w-full h-full text-center rounded-md p-4 text-siphon bg-sohoLights hover:opacity-75 active:opacity-75`,
+        `flex justify-center items-center w-full h-full text-center rounded-md p-4 text-siphon bg-sohoLights md:hover:opacity-75 active:opacity-75`,
         {
           "[&]:bg-sohoLights [&]:opacity-75 hover:opacity-75 active:opacity-75 [&]:text-ice cursor-not-allowed":
             disabled,

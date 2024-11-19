@@ -15,8 +15,6 @@ export default function Product({
   loading,
   error,
 }: IProductPageProps) {
-  console.log(product, error);
-
   if (loading) {
     return <div>Loading...</div>;
   }

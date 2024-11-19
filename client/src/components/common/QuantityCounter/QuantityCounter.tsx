@@ -1,24 +1,24 @@
-import React, { FC, useState } from "react";
+import { FC, useEffect } from "react";
+
+import { useCounter } from "@/components/common/QuantityCounter/hooks/useCounter/useCounter";
 import { Button } from "../Button";
 
-interface IQuantityCounterProps {
+export interface IQuantityCounterProps {
   maxQuantity: number;
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
-  quantity: number;
+  onQuantityChange?: (quantity: number) => void;
 }
 
 export const QuantityCounter: FC<IQuantityCounterProps> = ({
   maxQuantity,
-  setQuantity,
-  quantity,
+  onQuantityChange,
 }) => {
-  const increment = () => {
-    setQuantity((prev) => (prev < maxQuantity ? prev + 1 : prev));
-  };
+  const { quantity, increment, decrement } = useCounter(maxQuantity);
 
-  const decrement = () => {
-    setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
-  };
+  useEffect(() => {
+    if (onQuantityChange) {
+      onQuantityChange(quantity);
+    }
+  }, [quantity, onQuantityChange]);
 
   return (
     <div className="flex flex-col">
@@ -27,11 +27,11 @@ export const QuantityCounter: FC<IQuantityCounterProps> = ({
         <Button
           onClick={decrement}
           className="max-w-4 max-h-4"
-          disabled={quantity === 0}
+          disabled={quantity === 1}
         >
           -
         </Button>
-        <span className="">{quantity}</span>
+        <span title="Current quantity">{quantity}</span>
         <Button
           onClick={increment}
           className="max-w-4 max-h-4"

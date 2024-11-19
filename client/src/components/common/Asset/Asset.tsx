@@ -1,7 +1,7 @@
+import Image, { ImageProps } from "next/image";
 import { FC } from "react";
-import Image, { ImageProps } from 'next/image';
 
-interface IAssetProps extends Omit<ImageProps, 'className'> {
+export interface IAssetProps extends Omit<ImageProps, "className"> {
   src: string;
   alt: string;
   width: number;
@@ -9,7 +9,14 @@ interface IAssetProps extends Omit<ImageProps, 'className'> {
   className?: string;
 }
 
-export const Asset: FC<IAssetProps> = ({ src, alt, width, height, className, ...rest }) => {
+export const Asset: FC<IAssetProps> = ({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  ...rest
+}) => {
   return (
     <Image
       src={src}
@@ -19,5 +26,5 @@ export const Asset: FC<IAssetProps> = ({ src, alt, width, height, className, ...
       className={className}
       {...rest}
     />
-  )
-}
+  );
+};

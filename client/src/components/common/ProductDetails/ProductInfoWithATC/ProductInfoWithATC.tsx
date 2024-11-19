@@ -1,25 +1,26 @@
 import { Asset } from "@/components/common/Asset/Asset";
 import { Button } from "@/components/common/Button";
 import { QuantityCounter } from "@/components/common/QuantityCounter";
-import { useCart } from "@/hooks/useCart";
 import { TProduct } from "@/types/product";
 import { formatPrice } from "@/utils/helpers";
-import { FC, useContext, useState } from "react";
+import { FC } from "react";
 
-interface IProductInfoWithATCProps {
-  product: TProduct;
+interface IProductInfoWithATCProps
+  extends Pick<TProduct, "name" | "price" | "quantity" | "power"> {
+  handleAddToCart: () => void;
+  onQuantityChange?: (quantity: number) => void;
+  disabled?: boolean;
 }
 
 export const ProductInfoWithATC: FC<IProductInfoWithATCProps> = ({
-  product,
+  name,
+  price,
+  quantity,
+  power,
+  handleAddToCart,
+  onQuantityChange,
+  disabled,
 }) => {
-  const [userQuantity, setUserQuantity] = useState(0);
-  const [disabled, setDisabled] = useState(false);
-
-  const { addToCart, getCartTotal } = useCart();
-
-  const { price, name, quantity, power } = product;
-
   return (
     <div className="p-6 flex flex-col md:flex-row w-full">
       {/* Product Image */}
@@ -35,8 +36,9 @@ export const ProductInfoWithATC: FC<IProductInfoWithATCProps> = ({
           className="rounded-lg aspect-square object-cover"
         />
       </div>
+
+      {/* Product Details */}
       <div className="flex flex-col md:justify-end md:w-full md:p-6">
-        {/* Product Details */}
         <div className="flex flex-col gap-2 mt-4">
           <h1 className="text-4xl">{name}</h1>
           <p className="text-purpleHaze">{power} // Packet of 4</p>
@@ -48,17 +50,12 @@ export const ProductInfoWithATC: FC<IProductInfoWithATCProps> = ({
             <p className="text-2xl">{formatPrice(price)}</p>
             <QuantityCounter
               maxQuantity={quantity}
-              setQuantity={setUserQuantity}
-              quantity={userQuantity}
+              onQuantityChange={onQuantityChange}
             />
           </div>
-          <Button
-            disabled={userQuantity === 0 || userQuantity > quantity || disabled}
-            onClick={() => {
-              addToCart(product, userQuantity);
-              getCartTotal();
-            }}
-          >
+
+          {/* Add to Cart */}
+          <Button disabled={disabled} onClick={handleAddToCart}>
             Add to cart
           </Button>
         </div>
